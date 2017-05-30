@@ -1,17 +1,22 @@
 <?php
-
-if (!defined('ABSPATH')) {
-    exit;
-} // Exit if accessed directly
-
 /**
- * Plugin Name: WooCommerce Flow Webpay
- * Plugin URI: https://www.flow.cl
- * Description: Flow payment gateway for woocommerce (Webpay)
- * Version: 1.6
- * Author: Flow
- * Author URI: https://www.flow.cl
+ * Plugin Name:       WooCommerce Flow Webpay
+ * Description:       Flow payment gateway for Woocommerce (Webpay)
+ * Plugin URI:        https://www.flow.cl/plugins.php#woocommerce
+ * Version:           1.0
+ * Author:            Flow
+ * Author URI:        https://www.flow.cl
+ * Requires at least: 3.0.0
+ * Tested up to:      4.7.5
+ *
  */
+
+defined( 'ABSPATH' ) or exit; // Exit if accessed directly.
+
+// Make sure WooCommerce is active
+if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+	return;
+}
 
 add_action('plugins_loaded', 'woocommerce_flow_init', 0);
 
@@ -25,15 +30,12 @@ function woocommerce_flow_init()
 
         var $notify_url;
 
-        /**
-         * Constructor for the gateway.
-         *
-         */
-        public function __construct()
-        {
-        	error_log("on construct");
+        // Constructor for the gateway.
+
+	public function __construct() {
+            error_log("on construct");
             $this->id = 'flow';
-            //$this->icon = plugins_url('images/buttons/50x25.png', __FILE__);
+            $this->icon = plugins_url('images/buttons/50x25.png', __FILE__);
             $this->has_fields = false;
             $this->method_title = __('Flow - Pago electrónico via Webpay', 'woocommerce');
             $this->notify_url = str_replace('https:', 'http:', add_query_arg('wc-api', 'WC_Gateway_' . $this->id, home_url('/')));
@@ -208,12 +210,12 @@ function woocommerce_flow_init()
                     'desc_tip' => true
                 ),
             	'skip_type_id' => array(
-					'title' => __('Modo de acceso a Webpay', 'woocommerce'),
-					'type' => 'select',
-					'description' => __('Indique la forma en que se accederá a Webpay', 'woocommerce'),
-					'default' => 'd',
-					'desc_tip' => true,
-					'options' => array('d' => 'Ingreso directo a Webpay', 'f' => 'Mostrar pasarela Flow')
+		    'title' => __('Modo de acceso a Webpay', 'woocommerce'),
+		    'type' => 'select',
+		    'description' => __('Indique la forma en que se accederá a Webpay', 'woocommerce'),
+		    'default' => 'd',
+		    'desc_tip' => true,
+		    'options' => array('d' => 'Ingreso directo a Webpay', 'f' => 'Mostrar pasarela Flow')
 				),
             	'secret' => array(
                     'title' => __('Llave privada Flow', 'woocommerce'),
